@@ -1,6 +1,6 @@
-# Agentic Project Template
+# docful-doc
 
-A starter repository for projects that use role-based agents and approved project documentation to guide implementation.
+Project workspace for docful-doc. Product requirements and architecture are still to be defined; use the documents under `docs/` to record approved decisions.
 
 ## Included
 
