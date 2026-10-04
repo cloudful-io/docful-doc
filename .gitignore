@@ -1,0 +1,19 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+
+# Common generated files
+node_modules/
+dist/
+build/
+coverage/
+*.log
+
+# Local editor state
+.idea/
+.vscode/

@@ -1,0 +1,68 @@
+name: Implementation work
+description: Track one approved implementation unit
+title: ""
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Create Issues only from an approved implementation plan. Keep one Issue scoped to one coherent implementation unit.
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What approved behavior or change does this Issue implement?
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements
+      description: List the approved requirements addressed by this work.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use objective, testable criteria from the approved plan.
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: List prerequisite Issues, or write None.
+      value: None.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Include relevant product, architecture, security, or implementation constraints.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: Describe the required tests and validation.
+    validations:
+      required: true
+  - type: textarea
+    id: documentation
+    attributes:
+      label: Documentation
+      description: List documentation updates required by the approved plan, or write None.
+      value: None.
+    validations:
+      required: true
+  - type: input
+    id: plan
+    attributes:
+      label: Approved plan
+      description: Link to the approved implementation plan.
+    validations:
+      required: true
