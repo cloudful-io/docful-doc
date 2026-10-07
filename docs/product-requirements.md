@@ -10,7 +10,7 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
 - Help readers find pages through a complete, hierarchical navigation and full-text search.
 - Help readers jump between sections within a wiki page using an in-page table of contents.
 - Let site creators customize the site title, logo, and primary and secondary theme colors.
-- Let readers choose light, dark, or automatic appearance.
+- Let readers choose Light, Dark, or System appearance, where System follows the reader's device preference.
 - Make page content easy to reuse by providing a copy action.
 - Show page authors when available and show when each page was last updated.
 
@@ -96,13 +96,15 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
 
 ### PR-6: Reader appearance
 
-- **Description:** Readers shall be able to switch the site's appearance between light, dark, and automatic modes.
+- **Description:** Readers shall be able to switch the site's appearance between Light, Dark, and System modes using a compact theme picker modeled on the [Visually.Me help site](https://help.visuallyme.com/).
 - **Priority:** Must
 - **Acceptance criteria:**
-  - The appearance control offers Light, Dark, and Auto choices.
-  - Auto is the default and follows the reader's browser or device color-scheme preference.
+  - The site header shows a compact theme-picker button with a theme icon and the currently selected mode; it does not use a labeled Appearance select control.
+  - Activating the button opens a menu with Light, Dark, and System choices, and the current choice is visibly indicated.
+  - The control has an accessible name that indicates its purpose, exposes the selected mode, and supports keyboard operation.
+  - System is the default and follows the reader's browser or device color-scheme preference.
   - Choosing Light or Dark applies that appearance regardless of the browser or device preference.
-  - An explicit choice is remembered in the reader's browser and restored on later visits; selecting Auto returns control to the browser or device preference.
+  - An explicit choice is remembered in the reader's browser and restored on later visits; selecting System returns control to the browser or device preference.
   - All page surfaces, navigation, search, controls, and text remain readable and meet WCAG 2.2 AA contrast in each appearance mode, including when creator-configured theme colors are used.
 
 ### PR-7: In-page table of contents

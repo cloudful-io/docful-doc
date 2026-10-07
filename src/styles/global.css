@@ -153,8 +153,7 @@ a:hover {
   position: relative;
   min-width: 0;
 }
-.search-toolbar > label,
-.appearance-control > span {
+.search-toolbar > label {
   display: block;
   margin-bottom: 0.2rem;
   color: var(--muted);
@@ -216,16 +215,73 @@ button:hover {
   stroke-linejoin: round;
   stroke-width: 1.7;
 }
-.appearance-control {
-  display: block;
+.theme-picker {
+  position: relative;
   min-width: 6rem;
 }
-.appearance-control select {
-  width: 100%;
-  padding: 0.38rem 1.8rem 0.38rem 0.55rem;
+.theme-picker-trigger {
+  display: flex;
+  min-height: 2.5rem;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.65rem;
   border: 1px solid var(--line);
   border-radius: 0.45rem;
-  background: var(--page);
+  background: var(--surface-raised);
+  color: var(--text);
+  white-space: nowrap;
+}
+.theme-picker-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+.theme-picker-icon:not([data-active]) {
+  display: none;
+}
+.theme-picker-menu {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  width: 9rem;
+  margin: 0;
+  padding: 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--surface-raised);
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 16%);
+}
+.theme-picker-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.55rem;
+  border: 0;
+  border-radius: 0.3rem;
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+  text-align: left;
+}
+.theme-picker-option:hover,
+.theme-picker-option[aria-checked="true"] {
+  background: color-mix(
+    in srgb,
+    var(--theme-primary, #2457d6) 10%,
+    var(--page)
+  );
+  box-shadow: none;
+}
+.theme-picker-check {
+  color: var(--theme-primary, #2457d6);
+  font-weight: 750;
 }
 
 .search-results {

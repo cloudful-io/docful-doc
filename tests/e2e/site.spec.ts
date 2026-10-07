@@ -61,14 +61,31 @@ test("provides section links and copies rendered page text", async ({
     .toContain("Welcome to your documentation site");
 });
 
-test("switches between light, dark, and auto appearance", async ({ page }) => {
+test("changes Light, Dark, and System appearance from the theme menu", async ({
+  page,
+}) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
   const root = page.locator("html");
-  const appearance = page.getByRole("combobox", { name: "Appearance" });
+  const appearance = page.locator("[data-theme-picker-toggle]");
+  const menu = page.getByRole("menu");
   await expect(root).toHaveAttribute("data-theme", "dark");
-  await appearance.selectOption("light");
+  await expect(appearance).toHaveAccessibleName(
+    "Change theme, current mode System",
+  );
+  await expect(appearance.locator('[data-theme-icon="auto"]')).toBeVisible();
+  await appearance.click();
+  await expect(menu).toBeVisible();
+  await expect(
+    page.getByRole("menuitemradio", { name: "System" }),
+  ).toHaveAttribute("aria-checked", "true");
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
   await expect(root).toHaveAttribute("data-theme", "light");
+  await expect(appearance).toHaveAccessibleName(
+    "Change theme, current mode Light",
+  );
+  await expect(appearance.locator('[data-theme-icon="light"]')).toBeVisible();
   await expect
     .poll(() =>
       page.evaluate(() => localStorage.getItem("docful-doc-appearance")),
@@ -76,9 +93,28 @@ test("switches between light, dark, and auto appearance", async ({ page }) => {
     .toBe("light");
   await page.reload();
   await expect(root).toHaveAttribute("data-theme", "light");
-  await expect(appearance).toHaveValue("light");
-  await appearance.selectOption("auto");
+  await expect(appearance).toHaveAccessibleName(
+    "Change theme, current mode Light",
+  );
+  await appearance.click();
+  await expect(menu).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await expect(appearance).toBeFocused();
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => window.matchMedia("(prefers-color-scheme: dark)").matches,
+      ),
+    )
+    .toBe(true);
+  await appearance.click();
+  await page.getByRole("menuitemradio", { name: "System" }).click();
   await expect(root).toHaveAttribute("data-theme", "dark");
+  await expect(appearance).toHaveAccessibleName(
+    "Change theme, current mode System",
+  );
   await expect
     .poll(() =>
       page.evaluate(() => localStorage.getItem("docful-doc-appearance")),
