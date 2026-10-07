@@ -1,0 +1,37 @@
+---
+import FolderItem from "./FolderItem.astro";
+import type { WikiFolder } from "../lib/wiki";
+
+interface Props {
+  folder: WikiFolder;
+  activeId?: string;
+  level?: number;
+}
+
+const { folder, activeId, level = 1 } = Astro.props;
+---
+
+<li class="folder-item" data-level={level}>
+  <details class="folder-disclosure" open>
+    <summary>{folder.name}</summary>
+    <ul>
+      {
+        folder.folders.map((child) => (
+          <FolderItem folder={child} activeId={activeId} level={level + 1} />
+        ))
+      }
+      {
+        folder.pages.map((page) => (
+          <li>
+            <a
+              href={page.href}
+              aria-current={page.id === activeId ? "page" : undefined}
+            >
+              {page.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</li>

@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { wikiHref } from "../lib/base";
+
+const entries = await getCollection("wiki");
+const sorted = [...entries].sort((a, b) =>
+  a.data.title.localeCompare(b.data.title, undefined, { sensitivity: "base" }),
+);
+---
+
+<SiteLayout entries={entries}>
+  <section class="welcome-page">
+    <p class="eyebrow">Documentation</p>
+    <h1>Welcome</h1>
+    <p>
+      Browse the documentation using the page navigation or search all pages.
+    </p>
+    {
+      sorted.length > 0 ? (
+        <div>
+          <h2>Start reading</h2>
+          <ul class="welcome-links">
+            {sorted.slice(0, 8).map((entry) => (
+              <li>
+                <a href={wikiHref(entry.id)}>{entry.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>
+          Add Markdown files under <code>public/wiki</code> to publish
+          documentation.
+        </p>
+      )
+    }
+  </section>
+</SiteLayout>

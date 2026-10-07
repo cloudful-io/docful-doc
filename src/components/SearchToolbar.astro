@@ -1,0 +1,24 @@
+<form class="search-toolbar" role="search" data-search-form>
+  <label for="wiki-search">Search documentation</label>
+  <div class="search-field-row">
+    <input
+      id="wiki-search"
+      type="search"
+      name="q"
+      autocomplete="off"
+      placeholder="Search all pages"
+      data-search-input
+    />
+    <button type="submit">Search</button>
+  </div>
+  <div class="search-results" data-search-results hidden>
+    <p
+      class="search-status"
+      data-search-status
+      role="status"
+      aria-live="polite"
+    >
+    </p>
+    <ol data-search-list></ol>
+  </div>
+</form>

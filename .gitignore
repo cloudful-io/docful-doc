@@ -13,6 +13,9 @@ dist/
 build/
 coverage/
 *.log
+test-results/
+playwright-report/
+.astro/
 
 # Local editor state
 .idea/

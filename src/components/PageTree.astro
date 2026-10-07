@@ -1,0 +1,33 @@
+---
+import FolderItem from "./FolderItem.astro";
+import type { WikiFolder } from "../lib/wiki";
+
+interface Props {
+  tree: WikiFolder;
+  activeId?: string;
+}
+
+const { tree, activeId } = Astro.props;
+---
+
+<nav aria-label="Wiki pages" class="page-tree">
+  <ul>
+    {
+      tree.folders.map((folder) => (
+        <FolderItem folder={folder} activeId={activeId} />
+      ))
+    }
+    {
+      tree.pages.map((page) => (
+        <li>
+          <a
+            href={page.href}
+            aria-current={page.id === activeId ? "page" : undefined}
+          >
+            {page.title}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

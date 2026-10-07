@@ -1,36 +1,66 @@
 # docful-doc
 
-Project workspace for docful-doc. Product requirements and architecture are still to be defined; use the documents under `docs/` to record approved decisions.
+docful-doc is a standalone documentation site for help, FAQ, and development documentation. A host-application developer clones or forks this project, adds Markdown under `public/wiki`, configures the site, deploys it independently, and links to the resulting URL from their application.
 
-## Included
+## Run locally
 
-- Agent definitions in `.agents/agents/` for planning, issue creation, implementation, and content work.
-- Project guidance in `AGENTS.md` and `docs/development.md`.
-- Reusable documentation templates in `docs/templates/`.
-- GitHub issue forms in `.github/ISSUE_TEMPLATE/`.
+Requires Node.js 22.12 or later and npm.
 
-## Start a project from this template
+```sh
+npm install
+npm run dev
+```
 
-1. Create a repository from this template in GitHub, or copy the repository contents.
-2. Replace the starter product requirements in `docs/product-requirements.md` with the project's approved requirements.
-3. Fill in `docs/system-architecture.md` and `docs/package-api.md` as those decisions are made.
-4. Update `docs/development.md` with the project's commands and workflow.
-5. Review each agent in `.agents/agents/` and adjust its responsibilities and available tools for the target environment.
-6. Create feature documents from `docs/templates/feature.md` and implementation plans from `docs/templates/implementation-plan.md`.
-7. Remove sections and files that do not apply to the project.
+## Add documentation
 
-The documents under `docs/templates/` are starting points, not requirements. Keep only the contracts the project needs, and record unresolved decisions instead of treating guesses as approved behavior.
+Create `.md` files under `public/wiki`. The title is required; author is optional:
 
-## Enable GitHub template use
+```markdown
+---
+title: Getting started
+author: Documentation Team
+---
 
-After pushing this project to GitHub, open **Settings → General → Template repository** and enable **Template repository**. Users can then create new repositories from it with **Use this template**.
+Write the page content here.
 
-## Agent workflow
+## A section
 
-1. Approve product requirements.
-2. Ask the Planner agent to analyze a feature and prepare documentation plus an implementation plan.
-3. Review and approve that plan.
-4. Ask the Issue Creator agent to map approved implementation units to GitHub Issues.
-5. Assign each Issue to the Implementer agent.
+Headings generate section anchors and an in-page table of contents.
+```
 
-Agents must follow `AGENTS.md`, `docs/development.md`, and the assigned Issue. The plan and Issue acceptance criteria are the scope for implementation.
+Folders create nested navigation. At every level, folders appear before pages, and folders and page titles are sorted alphabetically. The site supports CommonMark and GFM tables, fenced code blocks, task lists, and autolinks. Raw HTML is not rendered.
+
+## Configure an instance
+
+Edit `src/site.config.ts`:
+
+```ts
+export const siteConfig = {
+  title: "Product Help",
+  logo: "branding/logo.svg", // optional file at public/branding/logo.svg
+  theme: {
+    primary: "#2457D6",
+    secondary: "#16A085",
+  },
+} as const;
+```
+
+Set the logo to a path relative to `public/`; it is displayed at no more than 100 CSS pixels high. Colors must be six-digit hexadecimal values. Defaults are used in the starter configuration. Text and interactive accents derive accessible foreground shades from the configured colors.
+
+Readers can select Light, Dark, or Auto appearance. Auto is the default and follows the browser or device color-scheme preference. An explicit Light or Dark choice is stored in that browser.
+
+## Build and deploy
+
+```sh
+npm run check
+npm run build
+npm run preview
+```
+
+Connect the repository to Vercel; `vercel.json` configures the Astro build and `dist` output. Vercel's generated URL can be used directly or replaced with a custom domain. Each host application links to its standalone documentation URL.
+
+The default deployment is at the root of its hostname. To build for a path prefix such as `/docs/`, set `DOCFUL_BASE_PATH=/docs/` in the deployment environment. The host application's routing layer must forward requests for that prefix to this Vercel deployment.
+
+## Commands
+
+See [docs/development.md](docs/development.md) for lint, typecheck, test, end-to-end, and benchmark commands. See [docs/content-contract.md](docs/content-contract.md) for the authoring and rendering contract.

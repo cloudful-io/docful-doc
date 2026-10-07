@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { updatedAtFor } from "../../lib/wiki";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("wiki");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, entries },
+  }));
+}
+
+const { entry, entries } = Astro.props;
+const { Content, headings } = await render(entry);
+const updatedAt = updatedAtFor(entry);
+const sourceTime = new Date(updatedAt);
+const toc = headings
+  .filter((heading) => heading.depth >= 2 && heading.text.trim())
+  .map((heading) => ({
+    depth: heading.depth,
+    slug: heading.slug,
+    text: heading.text,
+  }));
+---
+
+<SiteLayout
+  title={entry.data.title}
+  activeId={entry.id}
+  entries={entries}
+  toc={toc}
+>
+  <article class="wiki-article">
+    <header class="article-header">
+      <h1>{entry.data.title}</h1>
+      <div class="article-meta">
+        {entry.data.author && <span>By {entry.data.author}</span>}
+        <span
+          >Updated <time datetime={updatedAt} data-local-time
+            >{sourceTime.toUTCString()}</time
+          ></span
+        >
+      </div>
+    </header>
+    <div class="wiki-content" data-wiki-content>
+      <Content />
+    </div>
+    <div class="copy-row">
+      <button type="button" data-copy-page>Copy page text</button>
+      <span role="status" aria-live="polite" data-copy-status></span>
+    </div>
+  </article>
+</SiteLayout>
