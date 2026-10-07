@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const baseURL = "http://127.0.0.1:4321";
+const baseURL = "http://localhost:4321";
 const projects = [
   { name: "chromium-desktop", use: { ...devices["Desktop Chrome"] } },
   {
@@ -39,7 +39,7 @@ export default defineConfig({
   use: { baseURL, trace: "retain-on-failure" },
   projects,
   webServer: {
-    command: "npm run dev -- --host 127.0.0.1",
+    command: "npm run dev -- --host localhost",
     url: baseURL,
     env: { ASTRO_TELEMETRY_DISABLED: "1", ASTRO_DEV_BACKGROUND: "1" },
     reuseExistingServer: !process.env.CI,

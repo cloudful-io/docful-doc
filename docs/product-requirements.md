@@ -23,12 +23,12 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
 
 ## Users and use cases
 
-| User | Need | Desired outcome |
-| --- | --- | --- |
-| Site creator | Present documentation under a recognizable site identity | Customize the displayed site title, logo, and primary and secondary theme colors |
-| Documentation author | Publish help, FAQ, or development information from Markdown files | Have each file available as a wiki page, with an optional author attribution |
-| Host application developer | Create and operate a documentation instance for the application | Clone or fork the docful-doc GitHub project, configure and deploy an instance, then link to its URL |
-| Documentation reader | Find and read relevant information comfortably | Open the standalone site, browse the page hierarchy or search all wiki pages, choose a preferred appearance, then copy page content when needed |
+| User                       | Need                                                              | Desired outcome                                                                                                                                 |
+| -------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Site creator               | Present documentation under a recognizable site identity          | Customize the displayed site title, logo, and primary and secondary theme colors                                                                |
+| Documentation author       | Publish help, FAQ, or development information from Markdown files | Have each file available as a wiki page, with an optional author attribution                                                                    |
+| Host application developer | Create and operate a documentation instance for the application   | Clone or fork the docful-doc GitHub project, configure and deploy an instance, then link to its URL                                             |
+| Documentation reader       | Find and read relevant information comfortably                    | Open the standalone site, browse the page hierarchy or search all wiki pages, choose a preferred appearance, then copy page content when needed |
 
 ### PR-5: Standalone site delivery
 
@@ -78,6 +78,7 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
   - Folder structure is reflected as hierarchy in navigation.
   - At each level, folders appear before pages; folders and pages are each sorted alphabetically within their parent folder.
   - The navigation area can be collapsed and reopened.
+  - The collapse/expand control is a compact icon button at the left side of the site header, adjacent to the site identity; its accessible name announces the current action (hide or show navigation, or open or close navigation on mobile).
   - When collapsed, the wiki content area can use the space made available by the collapsed navigation.
 
 ### PR-4: Full-text search
@@ -145,7 +146,6 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
 - Each instance can be configured for either hostname-root hosting or path-prefix hosting; path-prefix hosting requires the hosting application's routing layer to forward the chosen prefix to the standalone deployment.
 
 ## Open questions
-
 
 ## Out of scope
 

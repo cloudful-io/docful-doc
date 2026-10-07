@@ -117,7 +117,7 @@ a:hover {
   position: relative;
   z-index: 5;
   display: grid;
-  grid-template-columns: minmax(12rem, 1fr) minmax(16rem, 34rem) auto;
+  grid-template-columns: auto minmax(12rem, 1fr) minmax(16rem, 34rem) auto;
   align-items: center;
   gap: 1.5rem;
   min-height: 5rem;
@@ -198,12 +198,23 @@ button:hover {
   gap: 0.8rem;
 }
 .sidebar-toggle {
-  align-self: end;
-  padding: 0.45rem 0.7rem;
-  white-space: nowrap;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  padding: 0.4rem;
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--text);
 }
-.mobile-toggle-label {
-  display: none;
+.sidebar-toggle-icon {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 .appearance-control {
   display: block;
@@ -550,7 +561,7 @@ h3 {
 
 @media (max-width: 1100px) {
   .site-header {
-    grid-template-columns: minmax(10rem, 1fr) minmax(15rem, 1.5fr);
+    grid-template-columns: auto minmax(10rem, 1fr) minmax(15rem, 1.5fr);
   }
   .header-controls {
     grid-column: 1 / -1;
@@ -576,7 +587,7 @@ h3 {
     padding: 0.75rem 1rem;
   }
   .identity {
-    grid-column: 1 / -1;
+    grid-column: 2;
   }
   .site-logo {
     max-height: 3rem;
@@ -591,12 +602,6 @@ h3 {
     grid-row: 3;
     justify-content: space-between;
     align-items: end;
-  }
-  .mobile-toggle-label {
-    display: inline;
-  }
-  .desktop-toggle-label {
-    display: none;
   }
   .wiki-layout,
   .wiki-layout[data-nav-collapsed="true"] {

@@ -3,6 +3,9 @@ export {};
 const toggle = document.querySelector<HTMLButtonElement>(
   "[data-sidebar-toggle]",
 );
+const chevron = toggle?.querySelector<SVGPathElement>(
+  "[data-navigation-chevron]",
+);
 const layout = document.querySelector<HTMLElement>("[data-wiki-layout]");
 const sidebar = document.querySelector<HTMLElement>("#wiki-sidebar");
 const mobileQuery = window.matchMedia("(max-width: 700px)");
@@ -24,11 +27,17 @@ if (toggle && layout && sidebar) {
     layout.dataset.mobileOpen = String(mobileQuery.matches && mobileOpen);
     const expanded = mobileQuery.matches ? mobileOpen : !desktopCollapsed;
     toggle.setAttribute("aria-expanded", String(expanded));
-    toggle.querySelector(".mobile-toggle-label")!.textContent = mobileOpen
-      ? "Close navigation"
-      : "Open navigation";
-    toggle.querySelector(".desktop-toggle-label")!.textContent =
-      desktopCollapsed ? "Show navigation" : "Hide navigation";
+    toggle.setAttribute(
+      "aria-label",
+      mobileQuery.matches
+        ? mobileOpen
+          ? "Close navigation"
+          : "Open navigation"
+        : desktopCollapsed
+          ? "Show navigation"
+          : "Hide navigation",
+    );
+    chevron?.setAttribute("d", expanded ? "M15 9l-3 3 3 3" : "M12 9l3 3-3 3");
   };
 
   toggle.addEventListener("click", () => {

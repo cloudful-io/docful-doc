@@ -92,11 +92,17 @@ test("collapses and reopens the page navigation", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
   const toggle = page.locator("[data-sidebar-toggle]");
+  await expect(toggle).toHaveAccessibleName("Hide navigation");
+  await expect(toggle.locator("svg")).toBeVisible();
+  await expect(toggle).toHaveCSS("width", "40px");
   const sidebar = page.getByRole("complementary", {
     name: "Documentation navigation",
   });
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(
+    page.getByRole("button", { name: "Show navigation" }),
+  ).toBeVisible();
   await expect(sidebar).toBeHidden();
   await toggle.click();
   await expect(sidebar).toBeVisible();
