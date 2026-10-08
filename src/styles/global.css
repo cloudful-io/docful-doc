@@ -245,7 +245,7 @@ button:hover {
   position: absolute;
   z-index: 10;
   bottom: calc(100% + 0.4rem);
-  right: 0;
+  left: 0;
   width: 9rem;
   margin: 0;
   padding: 0.3rem;

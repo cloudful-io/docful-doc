@@ -83,6 +83,16 @@ test("changes Light, Dark, and System appearance from the theme menu", async ({
   await expect(appearance.locator('[data-theme-icon="auto"]')).toBeVisible();
   await appearance.click();
   await expect(menu).toBeVisible();
+  const menuBox = await menu.boundingBox();
+  const sidebarBox = await page
+    .getByRole("complementary", { name: "Documentation navigation" })
+    .boundingBox();
+  expect(menuBox).not.toBeNull();
+  expect(sidebarBox).not.toBeNull();
+  expect(menuBox!.x).toBeGreaterThanOrEqual(sidebarBox!.x);
+  expect(menuBox!.x + menuBox!.width).toBeLessThanOrEqual(
+    sidebarBox!.x + sidebarBox!.width,
+  );
   await expect(
     page.getByRole("menuitemradio", { name: "System" }),
   ).toHaveAttribute("aria-checked", "true");
