@@ -78,7 +78,10 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
   - Folder structure is reflected as hierarchy in navigation.
   - At each level, folders appear before pages; folders and pages are each sorted alphabetically within their parent folder.
   - The navigation area can be collapsed and reopened.
-  - The collapse/expand control is a compact icon button at the left side of the site header, adjacent to the site identity; its accessible name announces the current action (hide or show navigation, or open or close navigation on mobile).
+  - A compact icon button at the bottom of the left navigation hides or shows the page list; it is immediately to the left of the theme picker.
+  - When the page list is collapsed, keep the navigation footer visible so the reader can still use the show-navigation button and theme picker.
+  - Keep the navigation footer visible while the page list scrolls; its controls do not scroll out of view with the page links.
+  - The button's accessible name announces the current action (hide or show navigation, or open or close navigation on mobile).
   - When collapsed, the wiki content area can use the space made available by the collapsed navigation.
 
 ### PR-4: Full-text search
@@ -99,7 +102,7 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
 - **Description:** Readers shall be able to switch the site's appearance between Light, Dark, and System modes using a compact theme picker modeled on the [Visually.Me help site](https://help.visuallyme.com/).
 - **Priority:** Must
 - **Acceptance criteria:**
-  - The site header shows a compact theme-picker button with a theme icon and the currently selected mode; it does not use a labeled Appearance select control.
+  - The bottom-left navigation footer shows a compact theme-picker button with a theme icon and the currently selected mode, immediately to the right of the navigation collapse/expand button; it does not use a labeled Appearance select control.
   - Activating the button opens a menu with Light, Dark, and System choices, and the current choice is visibly indicated.
   - The control has an accessible name that indicates its purpose, exposes the selected mode, and supports keyboard operation.
   - System is the default and follows the reader's browser or device color-scheme preference.

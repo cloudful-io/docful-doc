@@ -10,7 +10,7 @@ interface Props {
 const { tree, activeId } = Astro.props;
 ---
 
-<nav aria-label="Wiki pages" class="page-tree">
+<nav id="wiki-page-tree" aria-label="Wiki pages" class="page-tree">
   <ul>
     {
       tree.folders.map((folder) => (
