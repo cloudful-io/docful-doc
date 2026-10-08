@@ -66,9 +66,15 @@ test("changes Light, Dark, and System appearance from the theme menu", async ({
 }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
+  if ((page.viewportSize()?.width ?? 0) <= 700) {
+    await page.getByRole("button", { name: "Open navigation" }).click();
+  }
   const root = page.locator("html");
   const appearance = page.locator("[data-theme-picker-toggle]");
   const menu = page.getByRole("menu");
+  await expect(
+    page.getByRole("complementary", { name: "Documentation navigation" }),
+  ).toContainText("System");
   await expect(root).toHaveAttribute("data-theme", "dark");
   await expect(appearance).toHaveAccessibleName(
     "Change theme, current mode System",
@@ -92,6 +98,9 @@ test("changes Light, Dark, and System appearance from the theme menu", async ({
     )
     .toBe("light");
   await page.reload();
+  if ((page.viewportSize()?.width ?? 0) <= 700) {
+    await page.getByRole("button", { name: "Open navigation" }).click();
+  }
   await expect(root).toHaveAttribute("data-theme", "light");
   await expect(appearance).toHaveAccessibleName(
     "Change theme, current mode Light",

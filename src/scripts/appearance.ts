@@ -111,6 +111,7 @@ if (picker && toggle && menu && currentLabel) {
       }
       if (event.key === "Escape") {
         event.preventDefault();
+        event.stopPropagation();
         closeMenu(true);
       }
     });
@@ -121,7 +122,11 @@ if (picker && toggle && menu && currentLabel) {
       event.preventDefault();
       openMenu();
     }
-    if (event.key === "Escape" && !menu.hidden) closeMenu(true);
+    if (event.key === "Escape" && !menu.hidden) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeMenu(true);
+    }
   });
 
   document.addEventListener("click", (event) => {

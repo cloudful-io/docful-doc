@@ -191,11 +191,6 @@ button:hover {
     color-mix(in srgb, var(--theme-primary, #2457d6) 30%, transparent);
 }
 
-.header-controls {
-  display: flex;
-  align-items: end;
-  gap: 0.8rem;
-}
 .sidebar-toggle {
   display: grid;
   width: 2.5rem;
@@ -218,6 +213,9 @@ button:hover {
 .theme-picker {
   position: relative;
   min-width: 6rem;
+  width: max-content;
+  margin-top: auto;
+  padding-top: 1rem;
 }
 .theme-picker-trigger {
   display: flex;
@@ -247,7 +245,7 @@ button:hover {
 .theme-picker-menu {
   position: absolute;
   z-index: 10;
-  top: calc(100% + 0.4rem);
+  bottom: calc(100% + 0.4rem);
   right: 0;
   width: 9rem;
   margin: 0;
@@ -342,6 +340,9 @@ button:hover {
   overflow: auto;
 }
 .wiki-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 2.5rem);
   padding: 0.9rem 0.75rem 1.25rem 0;
   border-right: 1px solid var(--line);
 }
@@ -653,12 +654,6 @@ h3 {
     grid-column: 1 / -1;
     grid-row: 2;
   }
-  .header-controls {
-    grid-column: 1 / -1;
-    grid-row: 3;
-    justify-content: space-between;
-    align-items: end;
-  }
   .wiki-layout,
   .wiki-layout[data-nav-collapsed="true"] {
     display: flex;
@@ -668,6 +663,7 @@ h3 {
   }
   .wiki-sidebar {
     display: none;
+    height: auto;
   }
   .wiki-layout[data-mobile-open="true"] > .wiki-sidebar {
     position: fixed;
@@ -675,8 +671,10 @@ h3 {
     top: 10.9rem;
     bottom: 0;
     left: 0;
-    display: block;
+    display: flex;
+    flex-direction: column;
     width: min(21rem, 88vw);
+    height: auto;
     max-height: none;
     padding: 1rem;
     border: 1px solid var(--line);
