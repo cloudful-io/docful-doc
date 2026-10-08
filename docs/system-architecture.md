@@ -43,7 +43,7 @@ flowchart LR
 | Markdown content collection | Discovers files recursively, parses YAML frontmatter, validates required metadata, and supplies page content and folder hierarchy | Astro content collection with a local glob loader rooted at `public/wiki` |
 | Static page generator | Generates a page route for each Markdown file, shared site layout, navigation tree, in-page table of contents, and static assets | Astro static build output with configurable base path |
 | Search index generator | Extracts title, heading, body text, and last-updated timestamp; generates data for full-text search | Static JSON index emitted during the site build |
-| Wiki interface | Renders branding, page hierarchy, collapsible navigation, search results, page metadata, copy controls, appearance selection, and in-page section navigation | Standalone Astro pages with small client-side TypeScript modules for interactive behavior |
+| Wiki interface | Renders branding, page hierarchy, collapsible navigation, search results, page metadata, copy controls, a theme-picker menu, and in-page section navigation | Standalone Astro pages with small client-side TypeScript modules for interactive behavior |
 | Markdown renderer | Renders CommonMark and approved GFM features without raw HTML | Astro Markdown pipeline with configured remark/rehype plugins and sanitization |
 | Static host/CDN | Serves the compiled documentation website at its own URL | Vercel static deployment; HTTP(S) requests only |
 
@@ -54,7 +54,7 @@ flowchart LR
 3. The static build is deployed independently. It can be served from the root of a dedicated hostname or under a path prefix. For path-prefix hosting, the host application's routing layer forwards requests for that prefix to the standalone deployment; the application itself still links to the URL normally.
 4. A reader opens a generated page directly or uses the navigation tree. The selected page and its in-page table of contents are already delivered as static HTML, so the core content and section links work without client-side application hydration.
 5. Search loads its generated index in the browser when needed. Results follow the PRD's match-field priority, most-recent-first ordering within each priority, and excerpt behavior.
-6. Navigation collapse, search interaction, clipboard copy, and appearance selection use browser-side TypeScript. Appearance defaults to Auto, resolved from `prefers-color-scheme`; an explicit Light or Dark choice is saved in local storage for that browser. Page timestamps are formatted in the reader's local timezone with the timezone shown.
+6. Navigation collapse, search interaction, clipboard copy, and appearance selection use browser-side TypeScript. The header's theme-picker button opens a menu for Light, Dark, and System modes. System defaults to the reader's `prefers-color-scheme`; an explicit Light or Dark choice is saved in local storage for that browser. Page timestamps are formatted in the reader's local timezone with the timezone shown.
 
 The site and its Markdown, generated HTML, logo, and search index are public. The host application does not send user data or documentation requests to docful-doc beyond the reader's normal page visit.
 
@@ -69,7 +69,7 @@ The site and its Markdown, generated HTML, logo, and search index are public. Th
 | Markdown | Astro's Markdown pipeline with the approved GFM features; raw HTML remains disabled and output is sanitized | Uses Markdown-native content processing and meets the PRD's rendering and security constraints |
 | Search | MiniSearch in a small browser-side TypeScript module, backed by generated index data | Keeps the experience local and avoids a search service; docful-doc applies the approved match-tier and recency ordering |
 | Interactive behavior | Native browser APIs and small TypeScript modules; no React integration | Collapse, search, and copy are limited client interactions; pre-rendered wiki content stays available without hydrating a React application |
-| Styling | Responsive CSS with documented CSS custom properties for site branding and primary/secondary theme colors, plus light and dark color schemes | Keeps desktop, tablet, and mobile layouts under docful-doc's control; Auto follows `prefers-color-scheme`, and each scheme maintains WCAG 2.2 AA contrast with configured colors; the in-page table of contents sits alongside content on desktop and tablet and remains accessible on mobile |
+| Styling | Responsive CSS with documented CSS custom properties for site branding and primary/secondary theme colors, plus light and dark color schemes | Keeps desktop, tablet, and mobile layouts under docful-doc's control; System follows `prefers-color-scheme`, and each scheme maintains WCAG 2.2 AA contrast with configured colors; the in-page table of contents sits alongside content on desktop and tablet and remains accessible on mobile |
 | Hosting | Vercel static deployment connected to the GitHub repository | Supports static output, Git-triggered production and preview deployments, and optional custom domains; no server-side rendering or Vercel functions are needed for this site |
 | Validation | Build-time content schema validation; unit tests for indexing/ranking; browser tests for navigation, search, copy, and responsive behavior | Validates content and user-visible requirements without host-application integration tests |
 
@@ -93,7 +93,7 @@ MiniSearch supports in-memory full-text search in browsers and Node.js. Its rele
 
 - Build fails with a file-specific diagnostic when a Markdown file cannot be parsed or lacks required `title` metadata.
 - Static routes keep already-built wiki content readable when JavaScript is unavailable; search and copy controls require browser scripting.
-- CSS uses the system color scheme as the initial Auto appearance so the page has a usable scheme before browser-side preference restoration; explicit reader choices are restored from local storage.
+- CSS uses the system color scheme as the initial System appearance so the page has a usable scheme before browser-side preference restoration; explicit reader choices are restored from local storage.
 - Missing or invalid search data displays an understandable search error without hiding page content.
 - Site configuration, build, and deployment belong to docful-doc's repository and can be released independently of the host application.
 - In path-prefix mode, the host application's routing layer must forward the configured prefix to the Vercel deployment.
@@ -110,7 +110,7 @@ MiniSearch supports in-memory full-text search in browsers and Node.js. Its rele
 - Use semantic navigation, main, heading, and form elements; support keyboard use and visible focus.
 - Render the in-page table of contents as a labeled navigation landmark with links that follow the page's heading hierarchy; use stable heading IDs for section anchors.
 - Expose navigation expanded/collapsed state and search updates to assistive technology.
-- Implement the appearance selector as a keyboard-accessible control with its selected mode exposed to assistive technology; keep focus indicators and contrast clear in both schemes.
+- Implement the theme picker as a keyboard-accessible header button and menu with its selected mode exposed to assistive technology; keep focus indicators and contrast clear in both schemes.
 - Preserve logical focus when the mobile navigation opens or closes.
 - Meet WCAG 2.2 AA in light and dark schemes and support desktop, tablet, and mobile layouts.
 - Validate supported Chrome, Edge, Firefox, and Safari releases using browser tests against the standalone site.
@@ -127,7 +127,7 @@ MiniSearch supports in-memory full-text search in browsers and Node.js. Its rele
 | Use MiniSearch for local full-text matching | Accepted | Avoids a search service for the approved corpus; explicit PRD ranking rules are applied by docful-doc |
 | Use Astro's Markdown pipeline with the approved GFM features and sanitized output; disable raw HTML | Accepted | Matches the PRD's Markdown contract and rendering constraints |
 | Use responsive CSS with documented branding variables | Accepted | Supports desktop, tablet, and mobile layouts with site-level visual customization |
-| Offer Light, Dark, and Auto reader appearance modes; default to Auto | Accepted | Auto follows the browser/device `prefers-color-scheme`; explicitly selected Light or Dark is stored in browser local storage |
+| Offer Light, Dark, and System reader appearance modes; default to System | Accepted | System follows the browser/device `prefers-color-scheme`; explicitly selected Light or Dark is stored in browser local storage |
 | Validate content during build and cover logic and browser behavior with unit and browser tests | Accepted | Checks source content and user-visible requirements in the standalone site |
 | Use filesystem modification time for each page's update timestamp | Accepted | Capture the filesystem timestamp during the build and serialize it as an absolute time; display it in the reader's local timezone. Do not fall back to Git history. |
 | Use Vercel static hosting with Git integration | Accepted | Vercel supports static Astro sites and automatic preview deployments |
