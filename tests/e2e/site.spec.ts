@@ -81,7 +81,8 @@ test("changes Light, Dark, and System appearance from the theme menu", async ({
     "Change theme, current mode System",
   );
   await expect(appearance.locator('[data-theme-icon="auto"]')).toBeVisible();
-  await appearance.click();
+  await appearance.focus();
+  await page.keyboard.press("Enter");
   await expect(menu).toBeVisible();
   const menuBox = await menu.boundingBox();
   const sidebarBox = await page
@@ -116,7 +117,8 @@ test("changes Light, Dark, and System appearance from the theme menu", async ({
   await expect(appearance).toHaveAccessibleName(
     "Change theme, current mode Light",
   );
-  await appearance.click();
+  await appearance.focus();
+  await page.keyboard.press("Enter");
   await expect(menu).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(menu).toBeHidden();
@@ -129,7 +131,8 @@ test("changes Light, Dark, and System appearance from the theme menu", async ({
       ),
     )
     .toBe(true);
-  await appearance.click();
+  await appearance.focus();
+  await page.keyboard.press("Enter");
   await page.getByRole("menuitemradio", { name: "System" }).click();
   await expect(root).toHaveAttribute("data-theme", "dark");
   await expect(appearance).toHaveAccessibleName(
@@ -154,14 +157,49 @@ test("collapses and reopens the page navigation", async ({ page }) => {
   const sidebar = page.getByRole("complementary", {
     name: "Documentation navigation",
   });
+  const pageTree = page.getByRole("navigation", { name: "Wiki pages" });
+  const themePicker = page.locator("[data-theme-picker-toggle]");
+  await pageTree.evaluate((nav) => {
+    const list = nav.querySelector("ul");
+    for (let index = 0; index < 50; index += 1) {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = `#extra-${index}`;
+      link.textContent = `Extra page ${index}`;
+      item.append(link);
+      list?.append(item);
+    }
+  });
+  const footer = page.locator(".sidebar-footer");
+  const footerBeforeScroll = await footer.boundingBox();
+  await pageTree.evaluate((nav) => {
+    nav.scrollTop = nav.scrollHeight;
+  });
+  const footerAfterScroll = await footer.boundingBox();
+  expect(footerBeforeScroll?.y).toBe(footerAfterScroll?.y);
+  expect(footerAfterScroll?.y).toBeGreaterThanOrEqual(0);
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
-  await expect(
-    page.getByRole("button", { name: "Show navigation" }),
-  ).toBeVisible();
-  await expect(sidebar).toBeHidden();
-  await toggle.click();
+  await expect(toggle).toHaveAccessibleName("Show navigation");
   await expect(sidebar).toBeVisible();
+  await expect(pageTree).toBeHidden();
+  await expect(themePicker).toBeVisible();
+  await expect(toggle).toBeInViewport();
+  const toggleBox = await toggle.boundingBox();
+  const themeBox = await themePicker.boundingBox();
+  const footerBox = await page.locator(".sidebar-footer").boundingBox();
+  const sidebarBox = await sidebar.boundingBox();
+  expect(toggleBox).not.toBeNull();
+  expect(themeBox).not.toBeNull();
+  expect(footerBox).not.toBeNull();
+  expect(sidebarBox).not.toBeNull();
+  expect(Math.abs(toggleBox!.y - themeBox!.y)).toBeLessThan(1);
+  expect(
+    sidebarBox!.y + sidebarBox!.height - (footerBox!.y + footerBox!.height),
+  ).toBeLessThan(40);
+  await toggle.click();
+  await expect(toggle).toHaveAccessibleName("Hide navigation");
+  await expect(pageTree).toBeVisible();
 });
 
 test("opens and closes navigation on mobile", async ({ page }) => {
@@ -171,13 +209,27 @@ test("opens and closes navigation on mobile", async ({ page }) => {
   const sidebar = page.getByRole("complementary", {
     name: "Documentation navigation",
   });
-  await expect(sidebar).toBeHidden();
+  const pageTree = page.getByRole("navigation", { name: "Wiki pages" });
+  await expect(sidebar).toBeVisible();
+  await expect(pageTree).toBeHidden();
+  await expect(
+    page.getByRole("button", { name: "Open navigation" }),
+  ).toBeVisible();
+  const themePicker = page.locator("[data-theme-picker-toggle]");
+  await expect(themePicker).toBeVisible();
+  const toggleBox = await toggle.boundingBox();
+  const themeBox = await themePicker.boundingBox();
+  expect(toggleBox).not.toBeNull();
+  expect(themeBox).not.toBeNull();
+  expect(Math.abs(toggleBox!.y - themeBox!.y)).toBeLessThan(1);
   await toggle.click();
   await expect(
     page.getByRole("button", { name: "Close navigation" }),
   ).toHaveAttribute("aria-expanded", "true");
+  await expect(pageTree).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(sidebar).toBeHidden();
+  await expect(sidebar).toBeVisible();
+  await expect(pageTree).toBeHidden();
   await expect(
     page.getByRole("button", { name: "Open navigation" }),
   ).toBeFocused();

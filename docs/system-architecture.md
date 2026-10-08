@@ -54,7 +54,7 @@ flowchart LR
 3. The static build is deployed independently. It can be served from the root of a dedicated hostname or under a path prefix. For path-prefix hosting, the host application's routing layer forwards requests for that prefix to the standalone deployment; the application itself still links to the URL normally.
 4. A reader opens a generated page directly or uses the navigation tree. The selected page and its in-page table of contents are already delivered as static HTML, so the core content and section links work without client-side application hydration.
 5. Search loads its generated index in the browser when needed. Results follow the PRD's match-field priority, most-recent-first ordering within each priority, and excerpt behavior.
-6. Navigation collapse, search interaction, clipboard copy, and appearance selection use browser-side TypeScript. The header's theme-picker button opens a menu for Light, Dark, and System modes. System defaults to the reader's `prefers-color-scheme`; an explicit Light or Dark choice is saved in local storage for that browser. Page timestamps are formatted in the reader's local timezone with the timezone shown.
+6. Navigation collapse, search interaction, clipboard copy, and appearance selection use browser-side TypeScript. The navigation footer stays visible while its page list scrolls and when the list is collapsed; it holds the hide/show control to the left of the theme-picker button. The theme picker opens a menu for Light, Dark, and System modes. System defaults to the reader's `prefers-color-scheme`; an explicit Light or Dark choice is saved in local storage for that browser. Page timestamps are formatted in the reader's local timezone with the timezone shown.
 
 The site and its Markdown, generated HTML, logo, and search index are public. The host application does not send user data or documentation requests to docful-doc beyond the reader's normal page visit.
 
@@ -110,7 +110,7 @@ MiniSearch supports in-memory full-text search in browsers and Node.js. Its rele
 - Use semantic navigation, main, heading, and form elements; support keyboard use and visible focus.
 - Render the in-page table of contents as a labeled navigation landmark with links that follow the page's heading hierarchy; use stable heading IDs for section anchors.
 - Expose navigation expanded/collapsed state and search updates to assistive technology.
-- Implement the theme picker as a keyboard-accessible header button and menu with its selected mode exposed to assistive technology; keep focus indicators and contrast clear in both schemes.
+- Keep the navigation footer's hide/show control and theme picker visible and keyboard-accessible in expanded and collapsed states; expose the theme picker's selected mode to assistive technology and keep focus indicators and contrast clear in both schemes.
 - Preserve logical focus when the mobile navigation opens or closes.
 - Meet WCAG 2.2 AA in light and dark schemes and support desktop, tablet, and mobile layouts.
 - Validate supported Chrome, Edge, Firefox, and Safari releases using browser tests against the standalone site.
