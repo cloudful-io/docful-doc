@@ -214,7 +214,6 @@ button:hover {
   position: relative;
   min-width: 6rem;
   width: max-content;
-  margin-top: auto;
   padding-top: 1rem;
 }
 .theme-picker-trigger {
@@ -342,9 +341,16 @@ button:hover {
 .wiki-sidebar {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 2.5rem);
+  height: calc(100vh - 8rem);
+  overflow: hidden;
   padding: 0.9rem 0.75rem 1.25rem 0;
   border-right: 1px solid var(--line);
+}
+.page-tree {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .page-tree ul {
   display: grid;

@@ -75,6 +75,7 @@ test("changes Light, Dark, and System appearance from the theme menu", async ({
   await expect(
     page.getByRole("complementary", { name: "Documentation navigation" }),
   ).toContainText("System");
+  await expect(appearance).toBeInViewport();
   await expect(root).toHaveAttribute("data-theme", "dark");
   await expect(appearance).toHaveAccessibleName(
     "Change theme, current mode System",
