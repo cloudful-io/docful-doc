@@ -9,6 +9,15 @@ const resultsPanel = document.querySelector<HTMLElement>(
 );
 const status = document.querySelector<HTMLElement>("[data-search-status]");
 const list = document.querySelector<HTMLOListElement>("[data-search-list]");
+const shortcutHint = document.querySelector<HTMLElement>(
+  "[data-search-shortcut]",
+);
+if (input && shortcutHint) {
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  shortcutHint.textContent = isMac ? "⌘ K" : "Ctrl K";
+  input.setAttribute("aria-keyshortcuts", isMac ? "Meta+K" : "Control+K");
+}
+
 let searchIndex: MiniSearch<SearchDocument> | undefined;
 let indexPromise: Promise<MiniSearch<SearchDocument>> | undefined;
 
@@ -80,5 +89,24 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && resultsPanel && !resultsPanel.hidden) {
     resultsPanel.hidden = true;
     input?.focus();
+  }
+
+  if (
+    event.key === "k" &&
+    (event.metaKey || event.ctrlKey) &&
+    !event.altKey &&
+    !event.shiftKey
+  ) {
+    const active = document.activeElement;
+    const isEditable =
+      active instanceof HTMLInputElement ||
+      active instanceof HTMLTextAreaElement ||
+      active instanceof HTMLSelectElement ||
+      (active instanceof HTMLElement && active.isContentEditable);
+    if (isEditable && active !== input) return;
+
+    event.preventDefault();
+    input?.focus();
+    input?.select();
   }
 });
