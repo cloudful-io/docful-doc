@@ -62,7 +62,9 @@ test("records 30 page-load Core Web Vitals trials for the active Chrome device p
     await page
       .getByRole("searchbox", { name: "Search documentation" })
       .fill("task lists");
-    await page.getByRole("button", { name: "Search", exact: true }).click();
+    await page
+      .getByRole("searchbox", { name: "Search documentation" })
+      .press("Enter");
     await expect(page.locator("[data-search-status]")).toContainText(
       "matching",
     );

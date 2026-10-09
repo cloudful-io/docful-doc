@@ -26,7 +26,9 @@ test("searches page body text and links to the result", async ({ page }) => {
   await page
     .getByRole("searchbox", { name: "Search documentation" })
     .fill("task lists");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page
+    .getByRole("searchbox", { name: "Search documentation" })
+    .press("Enter");
   await expect(page.locator("[data-search-status]")).toContainText("matching");
   await expect(page.locator("[data-search-results] a").first()).toBeVisible();
 });
@@ -411,3 +413,37 @@ test("announces copy failure beside the sidebar button", async ({ page }) => {
   );
   await expect(button).toBeFocused();
 });
+
+for (const width of [1280, 900, 390]) {
+  test(`searches without a submit button at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const toolbar = page.getByRole("search");
+    const input = page.getByRole("searchbox", { name: "Search documentation" });
+    const results = page.locator("[data-search-results]");
+    await expect(toolbar.getByRole("button")).toHaveCount(0);
+    const toolbarBox = await toolbar.boundingBox();
+    const inputBox = await input.boundingBox();
+    expect(Math.abs(toolbarBox!.width - inputBox!.width)).toBeLessThan(2);
+    await expect(page.locator("[data-search-shortcut]")).toBeVisible();
+    await input.fill("documentation");
+    await expect(page.locator("[data-search-list] a").first()).toBeVisible();
+    await input.press("Escape");
+    await expect(results).toBeHidden();
+    await expect(input).toBeFocused();
+    await page.evaluate(() => {
+      document.documentElement.dataset.testNavigation = "unchanged";
+    });
+    await input.press("Enter");
+    await expect(results).toBeVisible();
+    await expect(page.locator("[data-search-list] a").first()).toBeVisible();
+    await expect(input).toHaveValue("documentation");
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-test-navigation",
+      "unchanged",
+    );
+    await expect(page).toHaveURL(/\/$/);
+    await input.fill("");
+    await expect(results).toBeHidden();
+  });
+}

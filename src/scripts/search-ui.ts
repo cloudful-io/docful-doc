@@ -87,6 +87,7 @@ input?.addEventListener("input", () => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && resultsPanel && !resultsPanel.hidden) {
+    event.preventDefault();
     resultsPanel.hidden = true;
     input?.focus();
   }
