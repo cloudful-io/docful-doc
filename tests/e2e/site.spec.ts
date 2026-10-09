@@ -52,7 +52,7 @@ test("provides section links and copies rendered page text", async ({
   ).toBeVisible();
   await page.getByRole("link", { name: "Markdown features" }).first().click();
   await expect(page).toHaveURL(/#markdown-features$/);
-  await page.getByRole("button", { name: "Copy page text" }).click();
+  await page.getByRole("button", { name: "Copy Page" }).click();
   await expect(page.locator("[data-copy-status]")).toHaveText(
     "Page text copied.",
   );
@@ -174,6 +174,10 @@ test("collapses and reopens the page navigation", async ({ page }) => {
   await expect(footer).toHaveCSS("border-top-width", "1px");
   for (const colorScheme of ["light", "dark"] as const) {
     await page.emulateMedia({ colorScheme });
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-theme",
+      colorScheme,
+    );
     const lineColor = await footer.evaluate((element) =>
       getComputedStyle(element).getPropertyValue("--line").trim(),
     );
@@ -346,3 +350,64 @@ for (const modifier of ["Control", "Meta"]) {
     await expect(searchInput).not.toBeFocused();
   });
 }
+
+for (const width of [1280, 900, 390]) {
+  test(`places Copy Page below sections at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/wiki/start-here/");
+    const sidebar = page.locator(".toc-sidebar");
+    const copy = sidebar.getByRole("button", { name: "Copy Page" });
+    const sections = sidebar.locator(".page-toc");
+    await expect(copy).toBeVisible();
+    await expect(sidebar.locator(".copy-row")).toHaveCSS(
+      "border-top-width",
+      "1px",
+    );
+    await expect(page.locator("article [data-copy-page]")).toHaveCount(0);
+    if (width > 700) {
+      const articleBox = await page.locator("article").boundingBox();
+      const sidebarBox = await sidebar.boundingBox();
+      expect(sidebarBox!.x).toBeGreaterThanOrEqual(
+        articleBox!.x + articleBox!.width,
+      );
+    } else {
+      await sections.locator("summary").click();
+      await expect(sections).not.toHaveAttribute("open");
+      await expect(copy).toBeVisible();
+    }
+    const sectionBox = await sections.boundingBox();
+    const copyBox = await copy.boundingBox();
+    expect(copyBox!.y).toBeGreaterThanOrEqual(
+      sectionBox!.y + sectionBox!.height,
+    );
+
+    await page.goto("/wiki/exploring/minimal-page/");
+    await expect(copy).toBeVisible();
+    await expect(sections).toHaveCount(0);
+    await expect(sidebar.locator(".copy-row")).toHaveCSS(
+      "border-top-width",
+      "0px",
+    );
+  });
+}
+
+test("announces copy failure beside the sidebar button", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async () => {
+          throw new Error("Clipboard denied");
+        },
+      },
+    });
+  });
+  await page.goto("/wiki/start-here/");
+  const button = page.getByRole("button", { name: "Copy Page" });
+  await button.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".toc-sidebar [data-copy-status]")).toHaveText(
+    "Could not copy automatically. Select the page text and copy it manually.",
+  );
+  await expect(button).toBeFocused();
+});
