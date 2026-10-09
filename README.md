@@ -2,6 +2,8 @@
 
 docful-doc is a standalone documentation site for help, FAQ, and development documentation. A host-application developer clones or forks this project, adds Markdown under `public/wiki`, configures the site, deploys it independently, and links to the resulting URL from their application.
 
+Explore the [deployed example](https://docful-doc.vercel.app/) to try the documentation site's features.
+
 ## Run locally
 
 Requires Node.js 22.12 or later and npm.
