@@ -164,10 +164,29 @@ a:hover {
   display: flex;
   gap: 0.45rem;
 }
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+.search-shortcut {
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.1rem 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.75rem;
+  pointer-events: none;
+}
 .search-field-row input {
   min-width: 0;
   flex: 1;
-  padding: 0.45rem 0.7rem;
+  padding: 0.45rem 4.5rem 0.45rem 0.7rem;
   border: 1px solid var(--line);
   border-radius: 0.45rem;
   background: var(--page);

@@ -90,6 +90,7 @@ docful-doc is a standalone documentation site for web applications. Each host-ap
 - **Priority:** Must
 - **Acceptance criteria:**
   - Readers can enter a search query in a toolbar available on the documentation site.
+  - Pressing Command-K on macOS or Ctrl-K on Windows/Linux focuses the Search documentation textbox without submitting the query.
   - Search considers the content of every wiki page, including pages in nested folders.
   - Search matches page titles, headings, and body text without regard to letter case.
   - Results rank title matches above heading matches, and heading matches above body-only matches.

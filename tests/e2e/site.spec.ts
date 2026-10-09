@@ -275,3 +275,52 @@ test("has no serious automated accessibility violations on the reader page", asy
     .analyze();
   expect(results.violations).toEqual([]);
 });
+
+for (const modifier of ["Control", "Meta"]) {
+  test(`focuses search input with ${modifier}-K shortcut`, async ({ page }) => {
+    await page.goto("/");
+    const isMac = await page.evaluate(() =>
+      /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent),
+    );
+    await expect(page.locator("[data-search-shortcut]")).toBeVisible();
+    await expect(page.locator("[data-search-shortcut]")).toHaveText(
+      isMac ? "⌘ K" : "Ctrl K",
+    );
+    const searchInput = page.getByRole("searchbox", {
+      name: "Search documentation",
+    });
+
+    await page.keyboard.press(`${modifier}+k`);
+    await expect(searchInput).toBeFocused();
+
+    // Results panel should not be visible (shortcut does not submit)
+    await expect(page.locator("[data-search-results]")).toBeHidden();
+
+    await searchInput.evaluate((element: HTMLInputElement) => {
+      element.value = "existing query";
+    });
+
+    // Move focus away, then press shortcut again
+    await page.getByRole("link").first().focus();
+    await expect(searchInput).not.toBeFocused();
+    await page.keyboard.press(`${modifier}+k`);
+    await expect(searchInput).toBeFocused();
+
+    await expect(searchInput).toHaveValue("existing query");
+    await expect(page.locator("[data-search-results]")).toBeHidden();
+
+    // Shortcut is suppressed when a different editable control has focus
+    await page.evaluate(() => {
+      const textarea = document.createElement("textarea");
+      textarea.id = "other-editable";
+      document.body.append(textarea);
+    });
+    const otherEditable = page.locator("#other-editable");
+    await otherEditable.focus();
+    await expect(otherEditable).toBeFocused();
+    await page.keyboard.press(`${modifier}+k`);
+    // Focus should remain on the other editable, not jump to search
+    await expect(otherEditable).toBeFocused();
+    await expect(searchInput).not.toBeFocused();
+  });
+}
