@@ -226,6 +226,7 @@ button:hover {
   align-items: center;
   gap: 0.6rem;
   padding-top: 1rem;
+  border-top: 1px solid var(--line);
 }
 .sidebar-toggle,
 .theme-picker-trigger {
@@ -652,6 +653,8 @@ h3 {
 .wiki-layout[data-nav-collapsed="true"] .sidebar-footer {
   margin-top: auto;
   gap: 0.3rem;
+  padding-top: 0;
+  border-top: 0;
 }
 .wiki-layout[data-nav-collapsed="true"] .theme-picker {
   min-width: 0;
@@ -753,8 +756,14 @@ h3 {
   .wiki-layout[data-mobile-open="true"] .page-tree {
     display: block;
   }
+  .wiki-layout .sidebar-footer {
+    padding-top: 0;
+    border-top: 0;
+  }
   .wiki-layout[data-mobile-open="true"] .sidebar-footer {
     margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
   }
   .toc-sidebar {
     order: -1;
