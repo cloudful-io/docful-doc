@@ -193,17 +193,13 @@ a:hover {
   color: var(--text);
 }
 
-button,
-.search-field-row button {
+button {
   border: 1px solid var(--theme-primary, #2457d6);
   border-radius: 0.45rem;
   background: var(--theme-primary, #2457d6);
   color: var(--theme-primary-text, #fff);
   cursor: pointer;
   font-weight: 650;
-}
-.search-field-row button {
-  padding: 0.42rem 0.8rem;
 }
 button:hover {
   box-shadow: 0 0 0 2px
