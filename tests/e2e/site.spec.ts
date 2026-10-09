@@ -171,6 +171,21 @@ test("collapses and reopens the page navigation", async ({ page }) => {
     }
   });
   const footer = page.locator(".sidebar-footer");
+  await expect(footer).toHaveCSS("border-top-width", "1px");
+  for (const colorScheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ colorScheme });
+    const lineColor = await footer.evaluate((element) =>
+      getComputedStyle(element).getPropertyValue("--line").trim(),
+    );
+    const rgb = lineColor
+      .slice(1)
+      .match(/.{2}/g)!
+      .map((channel) => parseInt(channel, 16));
+    await expect(footer).toHaveCSS(
+      "border-top-color",
+      `rgb(${rgb.join(", ")})`,
+    );
+  }
   const footerBeforeScroll = await footer.boundingBox();
   await pageTree.evaluate((nav) => {
     nav.scrollTop = nav.scrollHeight;
@@ -181,6 +196,8 @@ test("collapses and reopens the page navigation", async ({ page }) => {
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await expect(toggle).toHaveAccessibleName("Show navigation");
+  await expect(footer).toHaveCSS("border-top-width", "0px");
+  await expect(footer).toHaveCSS("padding-top", "0px");
   await expect(sidebar).toBeVisible();
   await expect(pageTree).toBeHidden();
   await expect(themePicker).toBeVisible();
@@ -210,6 +227,9 @@ test("opens and closes navigation on mobile", async ({ page }) => {
     name: "Documentation navigation",
   });
   const pageTree = page.getByRole("navigation", { name: "Wiki pages" });
+  const footer = page.locator(".sidebar-footer");
+  await expect(footer).toHaveCSS("border-top-width", "0px");
+  await expect(footer).toHaveCSS("padding-top", "0px");
   await expect(sidebar).toBeVisible();
   await expect(pageTree).toBeHidden();
   await expect(
@@ -227,7 +247,9 @@ test("opens and closes navigation on mobile", async ({ page }) => {
     page.getByRole("button", { name: "Close navigation" }),
   ).toHaveAttribute("aria-expanded", "true");
   await expect(pageTree).toBeVisible();
+  await expect(footer).toHaveCSS("border-top-width", "1px");
   await page.keyboard.press("Escape");
+  await expect(footer).toHaveCSS("border-top-width", "0px");
   await expect(sidebar).toBeVisible();
   await expect(pageTree).toBeHidden();
   await expect(
